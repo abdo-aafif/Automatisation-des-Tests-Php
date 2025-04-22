@@ -11,12 +11,13 @@ class StudentModelTest extends TestCase {
         $students = $model->findAll();
 
         $this->assertIsArray($students, "findAll retourne un tableau !");
+        
     }
 
     public function testInsertStudent()
     {
         $model = new StudentModel();
-        $data = ['name' => 'Sara Benali', 'grade' => 16.5];
+        $data = ['name' => 'Hamza elma', 'grade' => 16.5];
         $id = $model->insert($data);
 
         $this->assertGreaterThan(0, $id, "ID étudiant inséré > 0");
