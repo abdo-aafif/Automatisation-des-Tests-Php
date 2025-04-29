@@ -2,15 +2,29 @@ name: PHPUnit Tests
 
 on:
   push:
-    branches:
+    branches: 
       - main
   pull_request:
-    branches:
+    branches: 
       - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: atelier1
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
 
     steps:
       - name: Checkout code
@@ -19,11 +33,22 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.4.6' # Version à adapter selon le projet
-          extensions: mbstring, intl, bcmath, pdo, mysqli
+          php-version: '8.1'
+          extensions: mbstring, intl, bcmath, pdo_mysql
+          coverage: xdebug
 
-      - name: Install Composer dependencies
-        run: composer install --no-interaction
+      - name: Set up environment variables
+        run: cp .env.github .env
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Wait for MySQL to be ready
+        run: |
+          until mysqladmin ping -h127.0.0.1 -uroot -proot --silent; do
+            echo "Waiting for MySQL..."
+            sleep 5
+          done
 
       - name: Run PHPUnit tests
-        run: ./vendor/bin/phpunit --coverage-text
+        run: vendor/bin/phpunit --colors=always --coverage-text

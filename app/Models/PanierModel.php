@@ -6,9 +6,9 @@ use CodeIgniter\Model;
 
 class PanierModel extends Model
 {
-    protected $table      = 'paniers';
+    protected $table      = 'panier';
     protected $primaryKey = 'id';
 
-    protected $allowedFields = ['dateCommande', 'client'];
-    protected $useTimestamps = true;
+    protected $allowedFields = ['dateCreation', 'client'];
+    protected $useTimestamps = false;
 }
