@@ -18,6 +18,8 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: atelier1
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
         ports:
           - 3306:3306
         options: >-
@@ -49,6 +51,14 @@ jobs:
             echo "Waiting for MySQL..."
             sleep 5
           done
+
+      - name: Create the database for testing
+        run: |
+          mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS atelier1;"
+
+      - name: Execute schema.sql to create tables
+        run: |
+          mysql -u root -proot atelier1 < schema.sql  # Path vers schema.sql
 
       - name: Run PHPUnit tests
         run: vendor/bin/phpunit --colors=always --coverage-text
