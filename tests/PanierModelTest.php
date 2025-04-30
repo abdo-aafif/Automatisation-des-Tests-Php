@@ -98,6 +98,6 @@ class PanierModelTest extends CIUnitTestCase
     // Modifying this line to only compare the date without time
     $this->assertEquals($oldDate, (new \DateTime($expiredPaniers[0]['dateCreation']))->format('Y-m-d'));
 }
-
+ 
     
 }
