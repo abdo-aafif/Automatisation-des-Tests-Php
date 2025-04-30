@@ -47,18 +47,18 @@ jobs:
 
       - name: Wait for MySQL to be ready
         run: |
-          until mysqladmin ping -h127.0.0.1 -uroot -proot --silent; do
+          until mysqladmin ping -h 127.0.0.1 -uroot -proot --silent; do
             echo "Waiting for MySQL..."
             sleep 5
           done
 
       - name: Create the database for testing
         run: |
-          mysql -u root -proot -e "CREATE DATABASE IF NOT EXISTS atelier1;"
+          mysql -h 127.0.0.1 -P 3306 -u root -proot -e "CREATE DATABASE IF NOT EXISTS atelier1;"
 
       - name: Execute schema.sql to create tables
         run: |
-          mysql -u root -proot atelier1 < schema.sql  # Path vers schema.sql
+          mysql -h 127.0.0.1 -P 3306 -u root -proot atelier1 < schema.sql
 
       - name: Run PHPUnit tests
         run: vendor/bin/phpunit --colors=always --coverage-text
